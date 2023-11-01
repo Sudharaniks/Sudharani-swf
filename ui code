@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Smart Water Fountains</title>
+<style>
+/* Style for the water level display */ #water-level {
+font-size: 24px; font-weight: bold;
+}
+/* Style for the submit button */ #submit-button {
+padding: 10px 20px; font-size: 18px;
+}
+</style>
+</head>
+<body>
+<h1>Smart Water Fountains</h1>
+<p>Water Level: <span id="water-level">Loading...</span> cm</p>
+<button id="submit-button" onclick="sendDataToServer()">Submit Data</button>
+<script>
+// Function to update water level data from the server
+function updateWaterLevel() {
+// You can use AJAX or fetch to get data from your server
+
+// Replace the URL with the actual endpoint that provides water level data
+fetch('/getWaterLevelData')
+.then(response =>response.json())
+
+.then(data => {
+document.getElementById('water-level').textContent = data.waterLevel + " cm";
+})
+.catch(error => {
+console.error('Error fetching water level data:', error);
+});
+}
+// Function to send data to the server (e.g., to trigger data collection) function sendDataToServer() {
+// You can use AJAX or fetch to send data to your server
+// Replace the URL with the actual endpoint that handles data submission fetch('/submitData', { method: 'POST' })
+.then(response => {
+if (response.status === 200) { console.log('Data submitted successfully');
+}
+ else {
+console.error('Data submission failed with status:', response.status);
+}
+})
+.catch(error => {
+
+console.error('Error submitting data:', error);
+});
+}
+// Update water level initially and then at regular intervals updateWaterLevel();
+setInterval(updateWaterLevel, 10000);
+ // Update every 10 seconds
+</script>
+</body>
+</html>
+
