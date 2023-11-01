@@ -1,0 +1,36 @@
+# Import the necessary library
+ import tinkercad
+import requests # Add the requests library for HTTP requests 
+# Initialize the Tinkercad API
+tc = tinkercad.Tinkercad(username="vignesh03", password="vignesh") # Find the simulation you want to run (use the correct ID)
+ simulation_id = "2303774"
+# Get the simulation
+simulation = tc.get_simulation(simulation_id) # Define the ThingSpeak API parameters 
+thingspeak_api_key="G5YN4PEKH3VEQ0JA"
+thingspeak_url=fhttps://api.thingspeak.com/update?api_key={thingspeak_api_key}
+ # Define the code to run in the Arduino
+arduino_code = """ #include<Ultrasonic.h>
+Ultrasonic ultrasonic(2, 3); // Trigger (pin 2), Echo (pin 3) void setup() {
+Serial.begin(9600);
+}
+void loop() {
+float distance = ultrasonic.Ranging(CM); Serial.println(distance);
+// Send data to the computer (Python script) 
+Serial.print("D:");
+Serial.println(distance);
+
+
+delay(1000);
+
+}
+
+"""
+# Upload and run the code in the simulation simulation.run_code(arduino_code)
+# Monitor the water level and send data to ThingSpeak while True:
+data = simulation.get_serial_data() if data and data.startswith("D:"):
+distance = float(data[2:]) print(f"Water level: {distance}cm") # Send data to ThingSpeak
+try:
+response = requests.get(f"{thingspeak_url}&field1={distance}") if response.status_code == 200:
+print("Data sent to ThingSpeak successfully.") else:
+print("Failed to send data to ThingSpeak.") except Exception as e:
+print("Error sending data to ThingSpeak:", str(e)) 
