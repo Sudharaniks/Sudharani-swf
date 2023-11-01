@@ -1,0 +1,30 @@
+#import RPi.GPIO as GPIO 
+import time
+# Set the GPIO mode and pin numbers 
+GPIO.setmode(GPIO.BCM)
+ water_pump_pin = 17
+status_led_pin = 18 
+# Setup GPIO pins
+GPIO.setup(water_pump_pin, GPIO.OUT) 
+GPIO.setup(status_led_pin, GPIO.OUT)
+ def water_fountain_on():
+print("Water fountain turned on") 
+GPIO.output(water_pump_pin, GPIO.HIGH)
+ GPIO.output(status_led_pin, GPIO.HIGH)
+def water_fountain_off():
+print("Water fountain turned off") 
+GPIO.output(water_pump_pin, GPIO.LOW) 
+GPIO.output(status_led_pin, GPIO.LOW)
+# Main loop try:
+while True:
+# Check if the water level is low
+ if is_water_level_low(): 
+water_fountain_on()
+ 
+else:
+water_fountain_off()
+# Delay for 1 second
+time.sleep(1)
+except KeyboardInterrupt:
+# Clean up GPIO on keyboard interrupt
+GPIO.cleanup()	
