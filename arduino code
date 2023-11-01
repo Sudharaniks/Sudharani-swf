@@ -1,0 +1,39 @@
+#include <ESP8266WiFi.h>
+#include <WiFiClient.h>
+#include <Ultrasonic.h>
+const char* ssid = "YourWiFiSSID";
+const char* password = "YourWiFiPassword";
+const int trigPin = D2; // Trigger pin of Ultrasonic Sensor
+const int echoPin = D3; // Echo pin of Ultrasonic Sensor
+const int relayPin = D1; // Relay module control pin
+Ultrasonic ultrasonic(trigPin, echoPin);
+WiFiServer server(80);
+void setup() {
+ pinMode(relayPin, OUTPUT);
+ digitalWrite(relayPin, LOW);
+ Serial.begin(115200);
+ WiFi.begin(ssid, password);
+ while (WiFi.status() != WL_CONNECTED) {
+ delay(1000);
+ Serial.println("Connecting to WiFi...");
+ }
+ server.begin();
+}
+void loop() {
+ WiFiClient client = server.available();
+ if (client) {
+ String request = client.readStringUntil('\r');
+ if (request.indexOf("/on") != -1) {
+ digitalWrite(relayPin, HIGH); // Turn the pump on
+ delay(2000); // Run the pump for 2 seconds
+ digitalWrite(relayPin, LOW); // Turn the pump off
+ }
+ client.flush();
+ }
+ // Check water level
+ float distance = ultrasonic.read();
+ if (distance < 10) {
+ // Water is low, update the web interface
+ // You can send an HTML response to the client here
+ }
+}
